@@ -1,15 +1,56 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Prep Guide</title>
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <header>
+        <h1>Smart Prep Guide</h1>
+    </header>
+
+    <main>
+        <!-- Create New PrepItem Section -->
+        <div id="createPrepItem">
+            <h3>Create New PrepItem</h3>
+            <form id="prepItemForm">
+                <label for="itemName">Name:</label>
+                <input type="text" id="itemName" required><br>
+                
+                <label for="unitPrefix">Unit Prefix (e.g., lbs, batch):</label>
+                <input type="text" id="unitPrefix"><br>
+                
+                <label for="isFrozen">Contains Frozen Ingredients:</label>
+                <input type="checkbox" id="isFrozen"><br>
+                
+                <button type="submit">Add Item</button>
+            </form>
+        </div>
+    
+        <!-- All PrepItems Section -->
+        <div id="allPrepItems">
+            <h3>All PrepItems</h3>
+            <ul id="prepItemsList"></ul>
+            <button id="addToPrepListButton">Add Selected</button>
+            <button id="deleteItemsButton">Delete Selected</button>
+        </div>
+
+        <!-- Prep List Section -->
+        <div id="prepList">
+            <h3>Prep List</h3>
+            <ul id="prepListItems"></ul>
+        </div>
+    </main>
+    
+
+    <footer>
+        <p>© 2025 Smart Prep Guide</p>
+    </footer>
+
+    <!-- Link to the JavaScript file -->
+    <script src="scripts/app.js"></script>
+</body>
 </html>

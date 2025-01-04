@@ -1,0 +1,126 @@
+#createPrepItem {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#createPrepItem h3 {
+    margin-bottom: 10px;
+}
+
+#createPrepItem label {
+    display: block;
+    margin-top: 10px;
+}
+
+#createPrepItem input[type="text"],
+#createPrepItem input[type="checkbox"],
+#createPrepItem button {
+    margin-top: 5px;
+}
+
+#createPrepItem button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#createPrepItem button:hover {
+    background-color: #0056b3;
+}
+
+#allPrepItems {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#allPrepItems h3 {
+    margin-bottom: 10px;
+}
+
+#prepItemsList {
+    list-style: none;
+    padding: 0;
+}
+
+#prepItemsList li {
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#deleteItemsButton {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#deleteItemsButton:hover {
+    background-color: #a71d2a;
+}
+
+#prepList {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#prepList h3 {
+    margin-bottom: 10px;
+}
+
+#prepListItems {
+    list-style: none;
+    padding: 0;
+}
+
+#prepListItems li {
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.quantityField {
+    margin-left: 10px;
+    width: 60px;
+}
+
+#addToPrepListButton {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#addToPrepListButton:hover {
+    background-color: #218838;
+}
+
