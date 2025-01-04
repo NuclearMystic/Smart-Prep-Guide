@@ -1,0 +1,70 @@
+Contributing Guidelines
+Welcome to the Smart Prep Guide project! These guidelines are here to help us work together efficiently. They’re flexible—let’s collaborate and adjust as needed.
+
+Branching Strategy
+We’re using a basic branching model for simplicity and clarity.
+
+Main Branch:
+This branch always contains the latest stable version of the project.
+No direct commits—all changes come through pull requests (PRs).
+
+Feature Branches:
+Create a new branch for each feature, bug fix, or experiment. Use descriptive branch names:
+"feature/add-prep-item"
+"bugfix/fix-add-button"
+
+How to Create a Branch
+Sync with the latest main branch:
+-"bash"
+-"git checkout main"
+-"git pull"
+
+Create your feature branch:
+-"bash"
+-"git checkout -b feature/your-branch-name"
+-"Commit Messages"
+
+Commit often, and keep messages short but meaningful. Use these prefixes when applicable:
+"feat: – For new features (e.g., feat: add prep list drag-and-drop)."
+"fix: – For bug fixes (e.g., fix: resolve sorting issue)."
+"chore: – For small tasks like file cleanup (e.g., chore: reorganize CSS)."
+Example:
+bash
+git commit -m "feat: implement frozen ingredient reminders"
+
+Pull Requests
+When your branch is ready, submit a PR to main.
+
+Steps:
+Push your branch to GitHub:
+bash
+git push origin feature/your-branch-name
+Open a pull request on GitHub targeting the main branch.
+Add a clear description of your changes (e.g., “Implements the prep item creation system and basic validation”).
+Ensure your branch is up to date with main before submitting.
+Tag someone for a review, if needed.
+
+Syncing with Main
+To keep your branch in sync with the latest changes:
+
+Switch to your branch:
+bash
+git checkout feature/your-branch-name
+
+Rebase with main:
+bash
+git fetch origin
+git rebase origin/main
+Resolve any conflicts, if necessary.
+
+Project-Specific Notes
+Ensure that all HTML, CSS, and JavaScript changes are clean and functional.
+Follow file organization guidelines:
+Use folders like /styles, /scripts, and /assets.
+Add reusable components to separate files for modularity.
+Use a .gitignore file to avoid pushing unnecessary files.
+
+Testing and Debugging
+Test all features thoroughly before pushing or making a PR.
+Test the project on multiple devices (e.g., phone, tablet, PC) for responsiveness.
+If a bug arises, discuss it in the PR or open a new issue.
