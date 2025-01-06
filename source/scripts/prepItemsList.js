@@ -2,6 +2,7 @@ import { renderPrepList } from './prepList.js';
 
 export let prepItems = [];
 
+// Render the PrepItems list
 export function renderPrepItems(prepItemsList) {
     prepItemsList.innerHTML = "";
 
@@ -14,7 +15,7 @@ export function renderPrepItems(prepItemsList) {
         checkbox.type = "checkbox";
         checkbox.classList.add("itemCheckbox");
         checkbox.dataset.index = index;
-        checkbox.id = `checkbox-${index}`; // Optional unique id
+        checkbox.dataset.id = item.id; // Store the database ID for deletion
 
         listItem.prepend(checkbox);
 
@@ -30,10 +31,28 @@ export function renderPrepItems(prepItemsList) {
     });
 }
 
-export function addPrepItem(item) {
-    prepItems.push(item);
+// Add a new PrepItem
+export async function addPrepItem(item) {
+    const response = await fetch('addPrepItem.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            name: item.name,
+            unit_prefix: item.unitPrefix,
+            is_frozen: item.isFrozen,
+        }),
+    });
+    const data = await response.json();
+
+    if (data.success) {
+        item.id = data.id; // Store the database ID
+        prepItems.push(item);
+    } else {
+        console.error('Failed to add PrepItem to the database.');
+    }
 }
 
+// Handle drag-and-drop
 function handleDragStart(event) {
     const index = event.target.dataset.index;
     event.dataTransfer.setData("text/plain", index);
