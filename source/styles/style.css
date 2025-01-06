@@ -1,50 +1,97 @@
-#createPrepItem {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+header {
+    background-color: #50C878;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+footer {
     background-color: #f9f9f9;
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    color: #777;
+}
+
+/* Container Layout */
+main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+}
+
+#createPrepItem,
+#allPrepItems,
+#prepList {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Create Prep Item Form */
+#createPrepItem {
+    background-color: #ffffff;
+    margin: 20px;
+    padding: 15px;
+    border-radius: 8px;
 }
 
 #createPrepItem h3 {
-    margin-bottom: 10px;
+    font-size: 18px;
+    color: #50C878;
+    margin-bottom: 15px;
 }
 
 #createPrepItem label {
+    font-weight: bold;
     display: block;
     margin-top: 10px;
 }
 
-#createPrepItem input[type="text"],
-#createPrepItem input[type="checkbox"],
+#createPrepItem input,
 #createPrepItem button {
     margin-top: 5px;
+    padding: 8px 10px;
+    border-radius: 5px;
 }
 
 #createPrepItem button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    border: none;
-    background-color: #007BFF;
+    background-color: #50C878;
     color: white;
-    border-radius: 5px;
+    border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 #createPrepItem button:hover {
-    background-color: #0056b3;
+    background-color: #3a9257;
 }
 
+/* All PrepItems Section */
 #allPrepItems {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
+    background-color: #ffffff;
+    padding: 15px;
     border-radius: 8px;
-    background-color: #f9f9f9;
 }
 
 #allPrepItems h3 {
-    margin-bottom: 10px;
+    font-size: 18px;
+    color: #50C878;
+    margin-bottom: 15px;
 }
 
 #prepItemsList {
@@ -53,40 +100,58 @@
 }
 
 #prepItemsList li {
-    margin: 5px 0;
-    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#deleteItemsButton,
+#addToPrepListButton {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
 }
 
 #deleteItemsButton {
-    margin-top: 10px;
-    padding: 5px 10px;
-    border: none;
     background-color: #dc3545;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 #deleteItemsButton:hover {
     background-color: #a71d2a;
 }
 
+#addToPrepListButton {
+    background-color: #28a745;
+}
+
+#addToPrepListButton:hover {
+    background-color: #218838;
+}
+
+/* Prep List Section */
 #prepList {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
+    background-color: #ffffff;
+    padding: 15px;
     border-radius: 8px;
-    background-color: #f9f9f9;
 }
 
 #prepList h3 {
-    margin-bottom: 10px;
+    font-size: 18px;
+    color: #50C878;
+    margin-bottom: 15px;
 }
 
 #prepListItems {
@@ -95,32 +160,73 @@
 }
 
 #prepListItems li {
-    margin: 5px 0;
-    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .quantityField {
-    margin-left: 10px;
     width: 60px;
-}
-
-#addToPrepListButton {
-    margin-top: 10px;
-    padding: 5px 10px;
-    border: none;
-    background-color: #28a745;
-    color: white;
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    cursor: pointer;
 }
 
-#addToPrepListButton:hover {
-    background-color: #218838;
+#prepListItems .prep-list-item.frozen {
+    background-color: #96f3ff; /* Light blue */
+    border: 1px solid #45e9ff;
 }
 
+/* Notification Bar */
+#notificationBar {
+    position: fixed;
+    top: 60px; /* Adjust based on your header height */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    background-color: #afffca;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: fadeOut 3s forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+
+    #createPrepItem,
+    #allPrepItems,
+    #prepList {
+        max-width: 100%;
+    }
+}

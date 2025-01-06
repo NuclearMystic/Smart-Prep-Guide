@@ -1,5 +1,5 @@
 import { prepItems } from './prepItemsList.js';
-import { addToPrepList, renderPrepList } from './prepList.js';
+import { prepList, addToPrepList, renderPrepList } from './prepList.js';
 
 export function setupDragAndDrop(prepListItems) {
     prepListItems.addEventListener("dragover", (event) => {
@@ -9,19 +9,22 @@ export function setupDragAndDrop(prepListItems) {
     prepListItems.addEventListener("drop", (event) => {
         event.preventDefault();
 
+        // Get the index of the dragged item
         const index = event.dataTransfer.getData("text/plain");
+        const draggedItem = prepItems[index];
 
-        // Validate the dragged item
-        if (!prepItems[index]) {
-            console.error("Invalid drop: No matching PrepItem found.");
-            return;
+        // Check if the item already exists in the Prep List
+        const existingItem = prepList.find((item) => item.name === draggedItem.name);
+
+        if (existingItem) {
+            // Increment the quantity if the item already exists
+            existingItem.quantity += 1;
+        } else {
+            // Add the new item with an initial quantity of 1
+            addToPrepList({ ...draggedItem, quantity: 1 });
         }
 
-        const draggedItem = prepItems[index];
-        addToPrepList(draggedItem);
+        // Re-render the Prep List
         renderPrepList(prepListItems);
-
-        // Log the successful operation
-        console.log(`Item added to Prep List: ${draggedItem.name}`);
     });
 }

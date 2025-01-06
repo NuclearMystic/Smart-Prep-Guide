@@ -1,16 +1,27 @@
 <?php
 include 'db.php';
 
-$sql = "SELECT * FROM prep_list";
-$result = $conn->query($sql);
+header('Content-Type: application/json');
 
-$prepList = [];
-if ($result->num_rows > 0) {
+try {
+    // Fetch all rows from the prep_list table
+    $sql = "SELECT * FROM prep_list";
+    $result = $conn->query($sql);
+
+    if (!$result) {
+        throw new Exception("Database query failed: " . $conn->error);
+    }
+
+    $prepList = [];
     while ($row = $result->fetch_assoc()) {
         $prepList[] = $row;
     }
-}
 
-header('Content-Type: application/json');
-echo json_encode($prepList);
+    // Return the result as JSON
+    echo json_encode($prepList, JSON_UNESCAPED_UNICODE);
+} catch (Exception $e) {
+    // Handle errors gracefully
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => $e->getMessage()]);
+}
 ?>

@@ -8,6 +8,12 @@ export function renderPrepList(prepListItems) {
         const listItem = document.createElement("li");
         listItem.classList.add("prep-list-item");
 
+        // Add a class if the item is frozen
+        if (item.isFrozen) {
+            console.log(`Frozen item detected: ${item.name}`); // Debugging
+            listItem.classList.add("frozen");
+        }
+
         const itemName = document.createElement("span");
         itemName.textContent = `${item.name} (${item.unitPrefix || "No unit"})`;
 
@@ -17,22 +23,20 @@ export function renderPrepList(prepListItems) {
         quantityInput.min = 0;
         quantityInput.step = 0.01;
 
-        // Handle quantity change
         quantityInput.addEventListener("change", async (event) => {
             const newQuantity = parseFloat(event.target.value) || 0; // Default to 0 if input is cleared
             prepList[index].quantity = newQuantity;
             await updatePrepListItem(prepList[index]); // Update the database
         });
 
-        // Add remove button
+        // Remove button
         const removeButton = document.createElement("button");
         removeButton.textContent = "x";
         removeButton.classList.add("remove-button");
 
-        // Handle item removal
         removeButton.addEventListener("click", async () => {
             await deletePrepListItem(item.id); // Remove from database
-            prepList.splice(index, 1); // Remove from local array
+            prepList.splice(index, 1); // Remove from the array
             renderPrepList(prepListItems); // Re-render the list
         });
 
@@ -43,17 +47,30 @@ export function renderPrepList(prepListItems) {
     });
 }
 
+
 // Fetch Prep List items from the database
 export async function fetchPrepList(prepListItems) {
     try {
         const response = await fetch('getPrepList.php');
         const data = await response.json();
-        prepList.splice(0, prepList.length, ...data); // Replace current list with fetched items
+
+        // Map fetched data to include unit_prefix
+        prepList.splice(
+            0,
+            prepList.length,
+            ...data.map((item) => ({
+                ...item,
+                isFrozen: !!item.isFrozen, // Ensure `isFrozen` is boolean
+                unitPrefix: item.unit_prefix || "No unit", // Ensure `unitPrefix` is set
+            }))
+        );
+
         renderPrepList(prepListItems);
     } catch (error) {
         console.error('Error fetching Prep List:', error);
     }
 }
+
 
 // Add a new Prep List item to the database
 export async function addToPrepList(item) {
