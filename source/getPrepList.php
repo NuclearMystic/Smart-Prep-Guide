@@ -4,7 +4,7 @@ include 'db.php';
 header('Content-Type: application/json');
 
 try {
-    // Fetch all rows from the prep_list table
+    // Query to fetch all rows from the prep_list table
     $sql = "SELECT * FROM prep_list";
     $result = $conn->query($sql);
 
@@ -14,14 +14,23 @@ try {
 
     $prepList = [];
     while ($row = $result->fetch_assoc()) {
-        $prepList[] = $row;
+        // Map the result to ensure proper data handling
+        $prepList[] = [
+            'id' => (int)$row['id'], // Cast ID to integer
+            'name' => $row['name'],
+            'unit_prefix' => $row['unit_prefix'],
+            'quantity' => (float)$row['quantity'], // Cast quantity to float
+            'is_frozen' => (bool)$row['is_frozen'], // Convert to boolean
+        ];
     }
 
-    // Return the result as JSON
+    // Send the result as JSON
     echo json_encode($prepList, JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
-    // Handle errors gracefully
+    // Return an error response with an appropriate HTTP code
     http_response_code(500); // Internal Server Error
     echo json_encode(["error" => $e->getMessage()]);
+} finally {
+    // Ensure the database connection is closed
+    $conn->close();
 }
-?>

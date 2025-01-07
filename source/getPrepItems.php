@@ -1,16 +1,35 @@
 <?php
-include 'db.php'; // Ensure this includes your database connection setup
-
-$sql = "SELECT * FROM prep_items";
-$result = $conn->query($sql);
-
-$prepItems = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $prepItems[] = $row;
-    }
-}
+include 'db.php';
 
 header('Content-Type: application/json');
-echo json_encode($prepItems);
-?>
+
+try {
+    // Query to fetch all rows from the prep_items table
+    $sql = "SELECT * FROM prep_items";
+    $result = $conn->query($sql);
+
+    if (!$result) {
+        throw new Exception("Database query failed: " . $conn->error);
+    }
+
+    $prepItems = [];
+    while ($row = $result->fetch_assoc()) {
+        // Map the result to ensure proper data handling
+        $prepItems[] = [
+            'id' => (int)$row['id'], // Cast ID to integer
+            'name' => $row['name'],
+            'unit_prefix' => $row['unit_prefix'] ?? '', // Default to empty string if null
+            'is_frozen' => (bool)$row['is_frozen'], // Convert to boolean
+        ];
+    }
+
+    // Send the result as JSON
+    echo json_encode($prepItems, JSON_UNESCAPED_UNICODE);
+} catch (Exception $e) {
+    // Return an error response with an appropriate HTTP code
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => $e->getMessage()]);
+} finally {
+    // Ensure the database connection is closed
+    $conn->close();
+}

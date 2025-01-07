@@ -10,15 +10,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const addToPrepListButton = document.getElementById("addToPrepListButton");
     const deleteItemsButton = document.getElementById("deleteItemsButton");
 
-    // Initialize drag-and-drop functionality
-    setupDragAndDrop(prepListItems);
+    // Notification timeout
+    let notificationTimeout;
 
-    // Fetch PrepItems and PrepList from the database on page load
-    async function initializeApp() {
-        await fetchPrepItems();
-        await fetchPrepList(prepListItems);
+    // Notification system
+    function showNotification(message, type = 'info') {
+        const notificationBar = document.getElementById('notificationBar');
+
+        // Clear existing timeout
+        if (notificationTimeout) {
+            clearTimeout(notificationTimeout);
+        }
+
+        notificationBar.textContent = message;
+        notificationBar.style.backgroundColor = type === 'error' ? '#dc3545' : '#007BFF';
+        notificationBar.style.display = 'block';
+
+        notificationTimeout = setTimeout(() => {
+            notificationBar.style.display = 'none';
+        }, 3000);
     }
 
+    // Initialize the app
+    async function initializeApp() {
+        try {
+            await fetchPrepItems();
+            await fetchPrepList(prepListItems);
+            setupDragAndDrop(prepListItems); // Initialize drag-and-drop after fetching lists
+        } catch (error) {
+            console.error('Error initializing app:', error);
+        }
+    }
+
+    // Fetch PrepItems from the database
     async function fetchPrepItems() {
         try {
             const response = await fetch('getPrepItems.php');
@@ -33,23 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error('Error fetching PrepItems:', error);
         }
-    }
-
-    // Notification system
-    function showNotification(message, type = 'info') {
-        const notificationBar = document.getElementById('notificationBar');
-
-        // Set the message and color based on type
-        notificationBar.textContent = message;
-        notificationBar.style.backgroundColor = type === 'error' ? '#dc3545' : '#007BFF';
-
-        // Show the notification
-        notificationBar.style.display = 'block';
-
-        // Hide after 3 seconds
-        setTimeout(() => {
-            notificationBar.style.display = 'none';
-        }, 3000);
     }
 
     // Handle form submission to create a new PrepItem
@@ -75,17 +82,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Handle Add Selected button click
-    addToPrepListButton.addEventListener("click", () => {
+    addToPrepListButton.addEventListener("click", async () => {
         const selectedCheckboxes = document.querySelectorAll(".itemCheckbox:checked");
 
-        selectedCheckboxes.forEach((checkbox) => {
+        for (const checkbox of selectedCheckboxes) {
             const index = parseInt(checkbox.dataset.index, 10);
             const selectedItem = prepItems[index];
 
             if (selectedItem) {
-                addToPrepList(selectedItem);
+                await addToPrepList(selectedItem); // Ensure database updates before rendering
             }
-        });
+        }
 
         renderPrepList(prepListItems);
         showNotification("Items added to Prep List!");

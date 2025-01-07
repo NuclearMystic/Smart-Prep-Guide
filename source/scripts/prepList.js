@@ -10,7 +10,6 @@ export function renderPrepList(prepListItems) {
 
         // Add a class if the item is frozen
         if (item.isFrozen) {
-            console.log(`Frozen item detected: ${item.name}`); // Debugging
             listItem.classList.add("frozen");
         }
 
@@ -47,14 +46,12 @@ export function renderPrepList(prepListItems) {
     });
 }
 
-
 // Fetch Prep List items from the database
 export async function fetchPrepList(prepListItems) {
     try {
         const response = await fetch('getPrepList.php');
         const data = await response.json();
 
-        // Map fetched data to include unit_prefix
         prepList.splice(
             0,
             prepList.length,
@@ -71,7 +68,6 @@ export async function fetchPrepList(prepListItems) {
     }
 }
 
-
 // Add a new Prep List item to the database
 export async function addToPrepList(item) {
     const existingItem = prepList.find((listItem) => listItem.name === item.name);
@@ -80,21 +76,27 @@ export async function addToPrepList(item) {
         existingItem.quantity += 1;
         await updatePrepListItem(existingItem); // Update quantity in the database
     } else {
-        const response = await fetch('addPrepListItem.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                name: item.name,
-                unit_prefix: item.unitPrefix,
-                quantity: 1,
-            }),
-        });
-        const data = await response.json();
+        try {
+            const response = await fetch('addPrepListItem.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    name: item.name,
+                    unit_prefix: item.unitPrefix,
+                    quantity: 1,
+                    is_frozen: item.isFrozen ? 1 : 0, // Pass the isFrozen flag
+                }),
+            });
 
-        if (data.success) {
-            prepList.push({ ...item, id: data.id, quantity: 1 });
-        } else {
-            console.error('Failed to add Prep List item to the database.');
+            const data = await response.json();
+
+            if (data.success) {
+                prepList.push({ ...item, id: data.id, quantity: 1 });
+            } else {
+                console.error('Failed to add Prep List item to the database.');
+            }
+        } catch (error) {
+            console.error('Error adding Prep List item:', error);
         }
     }
     renderPrepList(prepListItems); // Re-render the list
@@ -127,9 +129,10 @@ async function deletePrepListItem(id) {
         const data = await response.json();
 
         if (!data.success) {
-            console.error('Failed to delete Prep List item from the database.');
+            console.error('Failed to delete Prep List item from the database:', data.message || data.error);
         }
     } catch (error) {
         console.error('Error deleting Prep List item:', error);
     }
 }
+

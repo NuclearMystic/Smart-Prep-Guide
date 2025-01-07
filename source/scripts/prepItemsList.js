@@ -10,7 +10,7 @@ export function renderPrepItems(prepItemsList) {
         const listItem = document.createElement("li");
         listItem.textContent = `${item.name} (${item.unitPrefix || "No unit"})`;
 
-        // Add checkbox
+        // Add checkbox for selection
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("itemCheckbox");
@@ -24,6 +24,7 @@ export function renderPrepItems(prepItemsList) {
         listItem.classList.add("draggable");
         listItem.dataset.index = index;
 
+        // Drag-and-drop event listeners
         listItem.addEventListener("dragstart", handleDragStart);
         listItem.addEventListener("dragend", handleDragEnd);
 
@@ -31,34 +32,39 @@ export function renderPrepItems(prepItemsList) {
     });
 }
 
-// Add a new PrepItem
+// Add a new PrepItem to the database and the array
 export async function addPrepItem(item) {
-    const response = await fetch('addPrepItem.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-            name: item.name,
-            unit_prefix: item.unitPrefix,
-            is_frozen: item.isFrozen,
-        }),
-    });
-    const data = await response.json();
+    try {
+        const response = await fetch('addPrepItem.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                name: item.name,
+                unit_prefix: item.unitPrefix,
+                is_frozen: item.isFrozen ? 1 : 0, // Convert boolean to integer for PHP
+            }),
+        });
+        const data = await response.json();
 
-    if (data.success) {
-        item.id = data.id; // Store the database ID
-        prepItems.push(item);
-    } else {
-        console.error('Failed to add PrepItem to the database.');
+        if (data.success) {
+            item.id = data.id; // Store the database ID
+            prepItems.push(item);
+        } else {
+            console.error('Failed to add PrepItem to the database:', data.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Error adding PrepItem:', error);
     }
 }
 
-// Handle drag-and-drop
+// Handle drag start
 function handleDragStart(event) {
     const index = event.target.dataset.index;
     event.dataTransfer.setData("text/plain", index);
     event.target.classList.add("dragging");
 }
 
+// Handle drag end
 function handleDragEnd(event) {
     event.target.classList.remove("dragging");
 }
