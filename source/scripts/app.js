@@ -1,9 +1,6 @@
-import { PrepItem } from './prepItem.js';
-import { prepItems, renderPrepItems, addPrepItem } from './prepItemsList.js';
-import { addToPrepList, renderPrepList, fetchPrepList } from './prepList.js';
-import { setupDragAndDrop } from './dragAndDrop.js';
-
 document.addEventListener("DOMContentLoaded", () => {
+    const API_BASE_URL = "http://10.0.0.232:5080/api"; // Centralized API base URL
+
     const prepItemForm = document.getElementById("prepItemForm");
     const prepItemsList = document.getElementById("prepItemsList");
     const prepListItems = document.getElementById("prepListItems");
@@ -45,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fetch PrepItems from the database
     async function fetchPrepItems() {
         try {
-            const response = await fetch('getPrepItems.php');
+            const response = await fetch(`${API_BASE_URL}/getPrepItems.php`);
             const data = await response.json();
 
             data.forEach((item) => {
@@ -116,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         try {
-            const response = await fetch('deletePrepItems.php', {
+            const response = await fetch(`${API_BASE_URL}/deletePrepItems.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(idsToDelete),

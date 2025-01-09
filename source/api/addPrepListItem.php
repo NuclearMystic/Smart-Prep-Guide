@@ -18,9 +18,6 @@ if (empty($name) || $quantity === null) {
     exit;
 }
 
-// Debug: Log received parameters (only for development/debugging purposes)
-error_log("Received Data - Name: $name, Unit Prefix: $unitPrefix, Quantity: $quantity, Is Frozen: $isFrozen");
-
 // Prepare the SQL statement
 $sql = "INSERT INTO prep_list (name, unit_prefix, quantity, is_frozen) VALUES (?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
@@ -41,9 +38,6 @@ if ($stmt->execute()) {
     $response['success'] = false;
     $response['error'] = "Execute failed: " . $stmt->error;
 }
-
-// Debug: Log response for troubleshooting
-error_log("Response: " . json_encode($response));
 
 // Close the statement and connection
 $stmt->close();

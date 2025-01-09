@@ -1,5 +1,7 @@
 export let prepList = [];
 
+const API_BASE_URL = "http://10.0.0.232:5080/api"; // Centralized API base URL
+
 // Render the Prep List
 export function renderPrepList(prepListItems) {
     prepListItems.innerHTML = "";
@@ -49,7 +51,7 @@ export function renderPrepList(prepListItems) {
 // Fetch Prep List items from the database
 export async function fetchPrepList(prepListItems) {
     try {
-        const response = await fetch('getPrepList.php');
+        const response = await fetch(`${API_BASE_URL}/getPrepList.php`);
         const data = await response.json();
 
         prepList.splice(
@@ -77,7 +79,7 @@ export async function addToPrepList(item) {
         await updatePrepListItem(existingItem); // Update quantity in the database
     } else {
         try {
-            const response = await fetch('addPrepListItem.php', {
+            const response = await fetch(`${API_BASE_URL}/addPrepListItem.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
@@ -105,7 +107,7 @@ export async function addToPrepList(item) {
 // Update a Prep List item in the database
 async function updatePrepListItem(item) {
     try {
-        await fetch('updatePrepListItem.php', {
+        await fetch(`${API_BASE_URL}/updatePrepListItem.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
@@ -121,7 +123,7 @@ async function updatePrepListItem(item) {
 // Remove a Prep List item from the database
 async function deletePrepListItem(id) {
     try {
-        const response = await fetch('deletePrepListItem.php', {
+        const response = await fetch(`${API_BASE_URL}/deletePrepListItem.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(id),
@@ -135,4 +137,3 @@ async function deletePrepListItem(id) {
         console.error('Error deleting Prep List item:', error);
     }
 }
-

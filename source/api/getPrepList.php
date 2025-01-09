@@ -9,7 +9,9 @@ try {
     $result = $conn->query($sql);
 
     if (!$result) {
-        throw new Exception("Database query failed: " . $conn->error);
+        // Log error and throw exception
+        error_log("Database query failed: " . $conn->error);
+        throw new Exception("Database query failed");
     }
 
     $prepList = [];
@@ -27,10 +29,12 @@ try {
     // Send the result as JSON
     echo json_encode($prepList, JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
-    // Return an error response with an appropriate HTTP code
+    // Log the error and return a generic error message
+    error_log("Error in getPrepList.php: " . $e->getMessage());
     http_response_code(500); // Internal Server Error
-    echo json_encode(["error" => $e->getMessage()]);
+    echo json_encode(["error" => "An error occurred while fetching the prep list."]);
 } finally {
     // Ensure the database connection is closed
     $conn->close();
 }
+?>

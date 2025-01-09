@@ -2,6 +2,8 @@ import { renderPrepList } from './prepList.js';
 
 export let prepItems = [];
 
+const API_BASE_URL = "http://10.0.0.232:5080/api"; // Centralized API base URL
+
 // Render the PrepItems list
 export function renderPrepItems(prepItemsList) {
     prepItemsList.innerHTML = "";
@@ -35,7 +37,7 @@ export function renderPrepItems(prepItemsList) {
 // Add a new PrepItem to the database and the array
 export async function addPrepItem(item) {
     try {
-        const response = await fetch('addPrepItem.php', {
+        const response = await fetch(`${API_BASE_URL}/addPrepItem.php`, { // Updated URL
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({

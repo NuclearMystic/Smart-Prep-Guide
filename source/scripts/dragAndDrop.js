@@ -2,6 +2,8 @@ import { prepItems } from './prepItemsList.js';
 import { prepList, addToPrepList, renderPrepList } from './prepList.js';
 
 export function setupDragAndDrop(prepListItems) {
+    const API_BASE_URL = "http://10.0.0.232:5080/api"; // Centralized API base URL
+
     // Allow drop on the Prep List container
     prepListItems.addEventListener("dragover", (event) => {
         event.preventDefault();
@@ -34,4 +36,23 @@ export function setupDragAndDrop(prepListItems) {
         // Re-render the Prep List
         renderPrepList(prepListItems);
     });
+
+    async function updatePrepListItem(item) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/updatePrepListItem.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    id: item.id,
+                    quantity: item.quantity,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update Prep List item");
+            }
+        } catch (error) {
+            console.error("Error updating Prep List item:", error);
+        }
+    }
 }
