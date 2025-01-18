@@ -2,10 +2,14 @@
 include 'db.php';
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *'); // Allow requests from other devices on the network
+header('Access-Control-Allow-Methods: POST'); // Only allow POST requests
+header('Access-Control-Allow-Headers: Content-Type'); // Support JSON input
 
 try {
     // Decode the JSON input
-    $ids = json_decode(file_get_contents('php://input'), true);
+    $input = file_get_contents('php://input');
+    $ids = json_decode($input, true);
 
     // Validate the input
     if (!is_array($ids) || empty($ids) || !array_filter($ids, 'is_numeric')) {
@@ -29,7 +33,7 @@ try {
 
     // Execute the statement
     if ($stmt->execute()) {
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'deleted_count' => $stmt->affected_rows]);
     } else {
         throw new Exception('Execution failed: ' . $stmt->error);
     }

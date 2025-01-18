@@ -2,6 +2,8 @@
 include 'db.php';
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *'); // Allow access from other devices on the network
+header('Access-Control-Allow-Methods: GET'); // Restrict to GET requests
 
 try {
     // Query to fetch all rows from the prep_list table
@@ -20,14 +22,14 @@ try {
         $prepList[] = [
             'id' => (int)$row['id'], // Cast ID to integer
             'name' => $row['name'],
-            'unit_prefix' => $row['unit_prefix'],
+            'unit_prefix' => $row['unit_prefix'] ?? '', // Default to empty string if null
             'quantity' => (float)$row['quantity'], // Cast quantity to float
             'is_frozen' => (bool)$row['is_frozen'], // Convert to boolean
         ];
     }
 
     // Send the result as JSON
-    echo json_encode($prepList, JSON_UNESCAPED_UNICODE);
+    echo json_encode($prepList, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
 } catch (Exception $e) {
     // Log the error and return a generic error message
     error_log("Error in getPrepList.php: " . $e->getMessage());

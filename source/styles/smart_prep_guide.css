@@ -40,6 +40,7 @@ main {
     min-width: 300px;
     max-width: 400px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Prevent overflow issues */
 }
 
 /* Create Prep Item Form */
@@ -67,6 +68,7 @@ main {
     margin-top: 5px;
     padding: 8px 10px;
     border-radius: 5px;
+    border: 1px solid #ccc; /* Add borders for inputs */
 }
 
 #createPrepItem button {
@@ -74,11 +76,12 @@ main {
     color: white;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 #createPrepItem button:hover {
     background-color: #3a9257;
+    transform: translateY(-2px); /* Subtle lift effect */
 }
 
 /* All PrepItems Section */
@@ -97,6 +100,8 @@ main {
 #prepItemsList {
     list-style: none;
     padding: 0;
+    max-height: 300px; /* Limit height for scroll */
+    overflow-y: auto; /* Add vertical scroll */
 }
 
 #prepItemsList li {
@@ -109,8 +114,14 @@ main {
     background-color: #f9f9f9;
     margin-bottom: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
 }
 
+#prepItemsList li:hover {
+    background-color: #e9f9ef;
+}
+
+/* Buttons */
 #deleteItemsButton,
 #addToPrepListButton {
     width: 100%;
@@ -157,6 +168,8 @@ main {
 #prepListItems {
     list-style: none;
     padding: 0;
+    max-height: 300px; /* Limit height for scroll */
+    overflow-y: auto; /* Add vertical scroll */
 }
 
 #prepListItems li {
@@ -169,8 +182,14 @@ main {
     background-color: #f9f9f9;
     margin-bottom: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
 }
 
+#prepListItems li:hover {
+    background-color: #e9f9ef;
+}
+
+/* Quantity Field */
 .quantityField {
     width: 60px;
     margin-left: 10px;
@@ -179,6 +198,7 @@ main {
     border-radius: 5px;
 }
 
+/* Frozen Items */
 #prepListItems .prep-list-item.frozen {
     background-color: #96f3ff; /* Light blue */
     border: 1px solid #45e9ff;
@@ -187,36 +207,22 @@ main {
 /* Notification Bar */
 #notificationBar {
     position: fixed;
-    top: 60px; /* Adjust based on your header height */
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
     max-width: 400px;
-    background-color: #afffca;
-    color: white;
+    background-color: #45e9ff; /* Improved contrast */
+    color: #333; /* Improved text visibility */
     padding: 10px;
     border-radius: 5px;
     text-align: center;
     font-size: 14px;
     z-index: 1000;
-    display: none; /* Hidden by default */
+    display: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     animation: fadeOut 3s forwards;
 }
-
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-10px);
-    }
-}
-
 
 /* Responsive Design */
 @media (max-width: 768px) {

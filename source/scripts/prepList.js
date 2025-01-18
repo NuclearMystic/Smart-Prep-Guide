@@ -1,6 +1,6 @@
 export let prepList = [];
 
-const API_BASE_URL = "http://10.0.0.232:5080/api"; // Centralized API base URL
+const API_BASE_URL = "http://10.0.0.76:5080/Smart-Prep-Guide/source/api"; // Centralized API base URL
 
 // Render the Prep List
 export function renderPrepList(prepListItems) {
@@ -16,11 +16,11 @@ export function renderPrepList(prepListItems) {
         }
 
         const itemName = document.createElement("span");
-        itemName.textContent = `${item.name} (${item.unitPrefix || "No unit"})`;
+        itemName.textContent = `${item.name} (${item.unitPrefix})`;
 
         const quantityInput = document.createElement("input");
         quantityInput.type = "number";
-        quantityInput.value = item.quantity;
+        quantityInput.value = item.quantity.toFixed(2); // Ensure consistent display
         quantityInput.min = 0;
         quantityInput.step = 0.01;
 
@@ -52,6 +52,10 @@ export function renderPrepList(prepListItems) {
 export async function fetchPrepList(prepListItems) {
     try {
         const response = await fetch(`${API_BASE_URL}/getPrepList.php`);
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
         const data = await response.json();
 
         prepList.splice(
@@ -59,14 +63,14 @@ export async function fetchPrepList(prepListItems) {
             prepList.length,
             ...data.map((item) => ({
                 ...item,
-                isFrozen: !!item.isFrozen, // Ensure `isFrozen` is boolean
+                isFrozen: Boolean(item.isFrozen), // Ensure `isFrozen` is boolean
                 unitPrefix: item.unit_prefix || "No unit", // Ensure `unitPrefix` is set
             }))
         );
 
         renderPrepList(prepListItems);
     } catch (error) {
-        console.error('Error fetching Prep List:', error);
+        console.error("Error fetching Prep List:", error);
     }
 }
 
@@ -80,8 +84,8 @@ export async function addToPrepList(item) {
     } else {
         try {
             const response = await fetch(`${API_BASE_URL}/addPrepListItem.php`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: new URLSearchParams({
                     name: item.name,
                     unit_prefix: item.unitPrefix,
@@ -90,33 +94,41 @@ export async function addToPrepList(item) {
                 }),
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+
             const data = await response.json();
 
             if (data.success) {
                 prepList.push({ ...item, id: data.id, quantity: 1 });
             } else {
-                console.error('Failed to add Prep List item to the database.');
+                console.error("Failed to add Prep List item to the database:", data.message || "Unknown error");
             }
         } catch (error) {
-            console.error('Error adding Prep List item:', error);
+            console.error("Error adding Prep List item:", error);
         }
     }
-    renderPrepList(prepListItems); // Re-render the list
+    renderPrepList(document.getElementById("prepListItems")); // Re-render the list
 }
 
 // Update a Prep List item in the database
 async function updatePrepListItem(item) {
     try {
-        await fetch(`${API_BASE_URL}/updatePrepListItem.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        const response = await fetch(`${API_BASE_URL}/updatePrepListItem.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
                 id: item.id,
                 quantity: item.quantity,
             }),
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
     } catch (error) {
-        console.error('Error updating Prep List item:', error);
+        console.error("Error updating Prep List item:", error);
     }
 }
 
@@ -124,16 +136,17 @@ async function updatePrepListItem(item) {
 async function deletePrepListItem(id) {
     try {
         const response = await fetch(`${API_BASE_URL}/deletePrepListItem.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(id),
         });
+
         const data = await response.json();
 
         if (!data.success) {
-            console.error('Failed to delete Prep List item from the database:', data.message || data.error);
+            console.error("Failed to delete Prep List item from the database:", data.message || "Unknown error");
         }
     } catch (error) {
-        console.error('Error deleting Prep List item:', error);
+        console.error("Error deleting Prep List item:", error);
     }
 }

@@ -1,5 +1,10 @@
+import { PrepItem } from './prepItem.js';
+import { prepItems, renderPrepItems, addPrepItem } from './prepItemsList.js';
+import { renderPrepList, addToPrepList, fetchPrepList } from './prepList.js';
+import { setupDragAndDrop } from './dragAndDrop.js';
+
 document.addEventListener("DOMContentLoaded", () => {
-    const API_BASE_URL = "http://10.0.0.232:5080/api"; // Centralized API base URL
+    const API_BASE_URL = "http://10.0.0.76:5080/Smart-Prep-Guide/source/api"; // Base URL for API
 
     const prepItemForm = document.getElementById("prepItemForm");
     const prepItemsList = document.getElementById("prepItemsList");
@@ -33,9 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             await fetchPrepItems();
             await fetchPrepList(prepListItems);
-            setupDragAndDrop(prepListItems); // Initialize drag-and-drop after fetching lists
+            setupDragAndDrop(prepListItems);
         } catch (error) {
             console.error('Error initializing app:', error);
+            showNotification("Failed to initialize app.", 'error');
         }
     }
 
@@ -43,16 +49,19 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchPrepItems() {
         try {
             const response = await fetch(`${API_BASE_URL}/getPrepItems.php`);
+            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
             const data = await response.json();
 
             data.forEach((item) => {
                 prepItems.push(new PrepItem(item.name, item.unit_prefix, item.is_frozen));
-                prepItems[prepItems.length - 1].id = item.id; // Attach database ID
+                prepItems[prepItems.length - 1].id = item.id;
             });
 
             renderPrepItems(prepItemsList);
         } catch (error) {
             console.error('Error fetching PrepItems:', error);
+            showNotification("Failed to fetch PrepItems.", 'error');
         }
     }
 
@@ -70,12 +79,17 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const newItem = new PrepItem(name, unitPrefix, isFrozen);
-        await addPrepItem(newItem); // Save to the database and add to the list
-        renderPrepItems(prepItemsList);
+        try {
+            const newItem = new PrepItem(name, unitPrefix, isFrozen);
+            await addPrepItem(newItem); // Save to the database and add to the list
+            renderPrepItems(prepItemsList);
 
-        showNotification(`${name} added to PrepItem List!`);
-        prepItemForm.reset();
+            showNotification(`${name} added to PrepItem List!`);
+            prepItemForm.reset();
+        } catch (error) {
+            console.error('Error adding PrepItem:', error);
+            showNotification("Failed to add PrepItem.", 'error');
+        }
     });
 
     // Handle Add Selected button click
@@ -132,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showNotification("Failed to delete items.", 'error');
             }
         } catch (error) {
+            console.error('Error deleting items:', error);
             showNotification("Error deleting items.", 'error');
         }
     });

@@ -1,21 +1,37 @@
+/* General body styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f3f3f3;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Ensure full height coverage */
 }
+
+/* Header styling */
 header {
     background-color: #50C878;
     color: white;
     padding: 15px;
     text-align: center;
+    width: 100%; /* Ensure the header spans the full width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
 }
+
+/* Main container */
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    width: 100%;
+    max-width: 600px; /* Limit maximum width for better readability */
+    margin: 0 auto;
 }
+
+/* Link/button styling */
 a {
     text-decoration: none;
     color: white;
@@ -23,8 +39,31 @@ a {
     padding: 10px 20px;
     margin: 10px 0;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    display: inline-block; /* Ensure proper alignment */
+    width: 100%; /* Make buttons full-width on smaller devices */
+    max-width: 300px; /* Limit width for readability on larger screens */
 }
+
+/* Hover effect for links */
 a:hover {
     background-color: #3a9157;
+    transform: translateY(-2px); /* Add a subtle lift effect on hover */
+}
+
+/* Logout button specific styling */
+a.logout {
+    background-color: #dc3545;
+}
+
+a.logout:hover {
+    background-color: #c82333;
+}
+
+/* Responsive design */
+@media (min-width: 600px) {
+    a {
+        width: auto; /* Revert to auto-width on larger screens */
+    }
 }

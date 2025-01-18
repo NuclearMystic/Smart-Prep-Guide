@@ -1,41 +1,70 @@
 <?php
 include 'db.php';
 
-header('Content-Type: application/json');
+session_start(); // Start the session
 
-session_start();
+// Enhance session security
+ini_set('session.cookie_secure', '1'); // Ensure cookies are sent over HTTPS
+ini_set('session.cookie_httponly', '1'); // Prevent JavaScript access to session cookies
+ini_set('session.use_strict_mode', '1'); // Reject uninitialized session IDs
 
 // Retrieve and sanitize input
-$username = $_POST['username'] ?? '';
-$password = $_POST['password'] ?? '';
+$username = trim($_POST['username'] ?? '');
+$password = trim($_POST['password'] ?? '');
 
+// Handle missing username or password
 if (empty($username) || empty($password)) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Username and password are required']);
+    // Redirect back to login page with an error message
+    header('Location: ../index.html?error=missing');
     exit;
 }
 
 // Query to check the credentials
-$sql = "SELECT id, password FROM users WHERE username = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
+try {
+    $sql = "SELECT id, password FROM users WHERE username = ?";
+    $stmt = $conn->prepare($sql);
 
-if ($result->num_rows === 1) {
-    $user = $result->fetch_assoc();
-    if (password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id']; // Set session
-        echo json_encode(['success' => true, 'message' => 'Login successful']);
-    } else {
-        http_response_code(401); // Unauthorized
-        echo json_encode(['success' => false, 'message' => 'Invalid credentials']);
+    if (!$stmt) {
+        throw new Exception("Failed to prepare statement: " . $conn->error);
     }
-} else {
-    http_response_code(401); // Unauthorized
-    echo json_encode(['success' => false, 'message' => 'Invalid credentials']);
-}
 
-$stmt->close();
-$conn->close();
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+
+        if (password_verify($password, $user['password'])) {
+            // Regenerate session ID to prevent session fixation
+            session_regenerate_id(true);
+
+            // Store user ID in session
+            $_SESSION['user_id'] = $user['id'];
+
+            // Redirect to the dashboard
+            header('Location: ../dashboard.html');
+            exit;
+        } else {
+            // Redirect back to login page with an error message
+            header('Location: ../index.html?error=invalid');
+            exit;
+        }
+    } else {
+        // Redirect back to login page with an error message
+        header('Location: ../index.html?error=invalid');
+        exit;
+    }
+} catch (Exception $e) {
+    // Log error for debugging
+    error_log("Error in login.php: " . $e->getMessage());
+    // Redirect with generic error message
+    header('Location: ../index.html?error=server');
+    exit;
+} finally {
+    if (isset($stmt) && $stmt instanceof mysqli_stmt) {
+        $stmt->close();
+    }
+    $conn->close();
+}
 ?>

@@ -6,13 +6,42 @@
     <title>Login</title>
     <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="styles/login.css">
+    <script>
+        // Client-side error handling for query parameters (optional enhancement)
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get("error");
+            const errorMessageElement = document.getElementById("error");
+
+            if (error) {
+                switch (error) {
+                    case "missing":
+                        errorMessageElement.textContent = "Please fill out all fields.";
+                        break;
+                    case "invalid":
+                        errorMessageElement.textContent = "Invalid username or password.";
+                        break;
+                    case "server":
+                        errorMessageElement.textContent = "An error occurred. Please try again.";
+                        break;
+                    default:
+                        errorMessageElement.textContent = "Unknown error.";
+                }
+                errorMessageElement.style.display = "block";
+            }
+        });
+    </script>
 </head>
 <body>
-    <form id="loginForm" action="http://10.0.0.232:5080/login.php" method="POST">
+    <form id="loginForm" action="http://10.0.0.76:5080/Smart-Prep-Guide/source/api/login.php" method="POST">
         <h1>Login</h1>
-        <p class="error" id="error"></p>
-        <input type="text" name="username" id="username" placeholder="Username" required>
+        <!-- Error message placeholder -->
+        <p class="error" id="error" style="display: none;"></p>
+        <!-- Username field -->
+        <input type="text" name="username" id="username" placeholder="Username" required autofocus>
+        <!-- Password field -->
         <input type="password" name="password" id="password" placeholder="Password" required>
+        <!-- Login button -->
         <button type="submit">Login</button>
     </form>
 </body>

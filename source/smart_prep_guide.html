@@ -15,35 +15,36 @@
 
     <main>
         <!-- Create New PrepItem Section -->
-        <div id="createPrepItem">
+        <section id="createPrepItem">
             <h3>Create New PrepItem</h3>
             <form id="prepItemForm">
                 <label for="itemName">Name:</label>
-                <input type="text" id="itemName" required><br>
+                <input type="text" id="itemName" placeholder="Enter item name" required><br>
                 
                 <label for="unitPrefix">Unit Prefix (e.g., lbs, batch):</label>
-                <input type="text" id="unitPrefix"><br>
+                <input type="text" id="unitPrefix" placeholder="Enter unit prefix"><br>
                 
-                <label for="isFrozen">Contains Frozen Ingredients:</label>
-                <input type="checkbox" id="isFrozen"><br>
+                <label for="isFrozen">
+                    <input type="checkbox" id="isFrozen"> Contains Frozen Ingredients
+                </label><br>
                 
                 <button type="submit">Add Item</button>
             </form>
-        </div>
+        </section>
     
         <!-- All PrepItems Section -->
-        <div id="allPrepItems">
+        <section id="allPrepItems">
             <h3>All PrepItems</h3>
             <ul id="prepItemsList"></ul>
             <button id="addToPrepListButton">Add Selected</button>
             <button id="deleteItemsButton">Delete Selected</button>
-        </div>
+        </section>
 
         <!-- Prep List Section -->
-        <div id="prepList" class="droppable">
+        <section id="prepList" class="droppable">
             <h3>Prep List</h3>
             <ul id="prepListItems"></ul>
-        </div>
+        </section>
     </main>
     
     <footer>

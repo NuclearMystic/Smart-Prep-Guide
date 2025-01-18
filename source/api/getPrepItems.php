@@ -2,6 +2,8 @@
 include 'db.php';
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *'); // Allow requests from other devices on the network
+header('Access-Control-Allow-Methods: GET'); // Restrict to GET requests
 
 try {
     // Query to fetch all rows from the prep_items table
@@ -26,7 +28,7 @@ try {
     }
 
     // Send the result as JSON
-    echo json_encode($prepItems, JSON_UNESCAPED_UNICODE);
+    echo json_encode($prepItems, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
 } catch (Exception $e) {
     // Log the error and return a generic error message
     error_log("Error in getPrepItems.php: " . $e->getMessage());

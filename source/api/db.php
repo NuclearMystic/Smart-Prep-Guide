@@ -1,10 +1,10 @@
 <?php
 // Database configuration
-$servername = "localhost";
+$servername = "localhost"; // Change to your laptop's IP if accessed from other devices
 $username = "root";
-$password = "";
+$password = ""; // Ensure this is secure if deploying online
 $dbname = "smart_prep_guide";
-$port = 3307; // Set the correct port for MySQL on your VM
+$port = 3306; // Updated to default MySQL port for local setup
 
 // Establish a connection
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
@@ -13,11 +13,17 @@ $conn = new mysqli($servername, $username, $password, $dbname, $port);
 if ($conn->connect_error) {
     // Log the error for debugging (avoid exposing sensitive info in production)
     error_log("Database connection failed: " . $conn->connect_error);
-    die("Database connection failed. Please try again later.");
+    die("Database connection failed. Please try again later."); // Avoid exposing details to users
 }
 
-// Optional: Set character set to UTF-8 for compatibility
-if (!$conn->set_charset("utf8")) {
-    error_log("Error loading character set utf8: " . $conn->error);
+// Set character set to UTF-8 for compatibility
+if (!$conn->set_charset("utf8mb4")) { // Use utf8mb4 for better support (e.g., emojis)
+    error_log("Error loading character set utf8mb4: " . $conn->error);
+    die("Failed to set database character set.");
+}
+
+// Enable strict SQL mode for better error handling (optional but recommended)
+if (!$conn->query("SET SESSION sql_mode = 'STRICT_ALL_TABLES'")) {
+    error_log("Failed to set strict SQL mode: " . $conn->error);
 }
 ?>

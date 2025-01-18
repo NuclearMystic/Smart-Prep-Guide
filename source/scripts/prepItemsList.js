@@ -2,7 +2,7 @@ import { renderPrepList } from './prepList.js';
 
 export let prepItems = [];
 
-const API_BASE_URL = "http://10.0.0.232:5080/api"; // Centralized API base URL
+const API_BASE_URL = "http://10.0.0.76:5080/Smart-Prep-Guide/source/api"; // Centralized API base URL
 
 // Render the PrepItems list
 export function renderPrepItems(prepItemsList) {
@@ -37,7 +37,7 @@ export function renderPrepItems(prepItemsList) {
 // Add a new PrepItem to the database and the array
 export async function addPrepItem(item) {
     try {
-        const response = await fetch(`${API_BASE_URL}/addPrepItem.php`, { // Updated URL
+        const response = await fetch(`${API_BASE_URL}/addPrepItem.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
@@ -46,6 +46,11 @@ export async function addPrepItem(item) {
                 is_frozen: item.isFrozen ? 1 : 0, // Convert boolean to integer for PHP
             }),
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.success) {
